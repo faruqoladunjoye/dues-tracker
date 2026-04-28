@@ -1,7 +1,3 @@
--- Akoka FC Monthly Dues Tracker — Database Schema
--- Run this file once against your Neon database to initialise all tables.
--- Then run `npm run seed` to create the admin account.
-
 CREATE TABLE IF NOT EXISTS players (
   id            SERIAL PRIMARY KEY,
   name          VARCHAR(100) NOT NULL,
@@ -14,7 +10,6 @@ CREATE TABLE IF NOT EXISTS players (
   created_at    TIMESTAMP DEFAULT NOW()
 );
 
--- Migration for existing databases (safe to re-run):
 ALTER TABLE players ADD COLUMN IF NOT EXISTS photo_url TEXT;
 
 CREATE TABLE IF NOT EXISTS monthly_dues (

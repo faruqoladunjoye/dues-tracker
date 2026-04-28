@@ -5,13 +5,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 async function seed() {
-  const username = process.env.ADMIN_USERNAME ?? 'admin';
-  const password = process.env.ADMIN_PASSWORD ?? 'Admin@1234';
+  const username = process.env.ADMIN_USERNAME;
+  const password = process.env.ADMIN_PASSWORD;
 
-  if (password === 'Admin@1234') {
-    console.warn('WARNING: Using default password. Set ADMIN_PASSWORD in .env before running in production.');
+  if (!username || !password) {
+    throw new Error('ADMIN_USERNAME and ADMIN_PASSWORD must be set');
   }
-
+  
   const hash = await bcrypt.hash(password, 12);
   await pool.query(
     `INSERT INTO admins (username, password_hash)

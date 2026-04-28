@@ -5,7 +5,6 @@ import { requireAdmin } from '../middleware/requireAdmin';
 const router = Router();
 
 // PATCH /api/dues/:playerId/:month
-// Uses upsert so players inserted via raw SQL (no pre-existing due rows) also work.
 router.patch('/:playerId/:month', requireAdmin, async (req, res) => {
   const playerId = parseInt(req.params.playerId, 10);
   const month = parseInt(req.params.month, 10);
@@ -19,8 +18,6 @@ router.patch('/:playerId/:month', requireAdmin, async (req, res) => {
     const settingsResult = await pool.query("SELECT value FROM settings WHERE key = 'active_year'");
     const activeYear = parseInt(settingsResult.rows[0]?.value ?? '2026', 10);
 
-    // If the row doesn't exist yet (e.g. player was SQL-inserted directly), insert it as paid.
-    // If it already exists, toggle paid status.
     const result = await pool.query(
       `INSERT INTO monthly_dues (player_id, month, year, paid, paid_at)
        VALUES ($1, $2, $3, TRUE, NOW())
